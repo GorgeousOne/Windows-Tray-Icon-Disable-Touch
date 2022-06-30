@@ -90,12 +90,12 @@
         <None Include="App.config" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="Resources\icon16x24x32.ico">
+      <EmbeddedResource Include="Resources\touch-disabled.ico">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <Content Include="Resources\icon32.png">
+      </EmbeddedResource>
+      <EmbeddedResource Include="Resources\touch-enabled.ico">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
+      </EmbeddedResource>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -13,28 +13,35 @@ namespace ToggleTouch
 	public partial class App
 	{
 		private readonly Forms.NotifyIcon _notifyIcon;
-		private bool _isTouchEnabled;
+		private bool _isTouchEnabled = true;
+
+		private Icon _enabledIcon;
+		private Icon _disabledIcon;
 		
 		public App()
 		{
 			_notifyIcon = new Forms.NotifyIcon();
+			_enabledIcon = new Icon("Resources/touch-enabled.ico");
+			_disabledIcon = new Icon("Resources/touch-disabled.ico");
 		}
 		
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			string path = Directory.GetCurrentDirectory();
 			Console.WriteLine(path);
-			
-			_notifyIcon.Icon = new System.Drawing.Icon("Resources/icon16x24x32.ico");
-			_notifyIcon.Text = "Toggle Touch";
+
+			_notifyIcon.Icon = _enabledIcon;
+			_notifyIcon.Text = "Touch Enabled";
 			_notifyIcon.Click += NotifyIcon_Click;
 			
 			// creates icon right click context menu
 			_notifyIcon.ContextMenuStrip = new Forms.ContextMenuStrip();
-			_notifyIcon.ContextMenuStrip.Items.Add("Status", Image.FromFile("Resources/icon16x24x32.ico"), OnStatusClicked);
+			// _notifyIcon.ContextMenuStrip.Items.Add("Exit", Image.FromFile("Resources/icon16x24x32.ico"), OnExitClicked);
+			_notifyIcon.ContextMenuStrip.Items.Add("Exit", null, OnExitClicked);
 			_notifyIcon.Visible = true;
-			string platform = Environment.Is64BitProcess ? "x64" : "x86";
-			_notifyIcon.ShowBalloonTip(1000, "Toggle Touch", platform , Forms.ToolTipIcon.Info);
+			
+			// string platform = Environment.Is64BitProcess ? "x64" : "x86";
+			// _notifyIcon.ShowBalloonTip(1000, "Toggle Touch", platform , Forms.ToolTipIcon.Info);
 
 			// creates a button click listener for the window?
 			// MainWindow = new MainWindow();
@@ -52,8 +59,13 @@ namespace ToggleTouch
 
 		private void NotifyIcon_Click(object sender, EventArgs e)
 		{
-			ToggleTouchScreen();
-			_notifyIcon.ShowBalloonTip(1000, "Toggle Touch", $"Touch enabled: {_isTouchEnabled}" , Forms.ToolTipIcon.Info);
+			Forms.MouseEventArgs mouseEventArgs = (Forms.MouseEventArgs)e;
+			
+			if (mouseEventArgs.Button == Forms.MouseButtons.Left)
+			{
+				ToggleTouchScreen();
+			}
+			
 			// MainWindow.WindowState = WindowState.Normal;
 			// MainWindow.Activate();
 		}
@@ -61,6 +73,8 @@ namespace ToggleTouch
 		public void ToggleTouchScreen()
 		{
 			_isTouchEnabled = !_isTouchEnabled;
+			_notifyIcon.Icon = _isTouchEnabled ? _enabledIcon : _disabledIcon;
+			_notifyIcon.Text = _isTouchEnabled ? "Touch Enabled" : "Touch Disabled";
 
 			// every type of device has a hard-coded GUID, this is the one for mice
 			// Guid mouseGuid = new Guid("{4d36e96f-e325-11ce-bfc1-08002be10318}");
@@ -77,9 +91,17 @@ namespace ToggleTouch
 			DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, _isTouchEnabled);
 		}
 		
-		private void OnStatusClicked(object sender, EventArgs e)
+		private void OnExitClicked(object sender, EventArgs e)
 		{
-			MessageBox.Show("Application is running", "Status", MessageBoxButton.OK, MessageBoxImage.Information);
+			// WinForms app
+			if (Forms.Application.MessageLoop) 
+			{
+				Forms.Application.Exit();
+			}
+			// Console app
+			else {
+				Environment.Exit(1);
+			}
 		}
 	}
 }
