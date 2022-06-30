@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace TestSysTray.ViewModels
+namespace ToggleTouch.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged
     {

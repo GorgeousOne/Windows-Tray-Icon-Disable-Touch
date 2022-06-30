@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace TestSysTray.Commands
+namespace ToggleTouch.Commands
 {
     public abstract class BaseCommand : ICommand
     {

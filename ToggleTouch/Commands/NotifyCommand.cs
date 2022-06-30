@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace TestSysTray.Commands
+namespace ToggleTouch.Commands
 {
     public class NotifyCommand : BaseCommand
     {

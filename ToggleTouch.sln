@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToggleTouch", "ToggleTouch\ToggleTouch.csproj", "{341A602A-9E8E-4F96-8B66-0DB3B485B2FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToggleTouch", "ToggleTouch\ToggleTouch.csproj", "{640A7D6E-E1C0-46C8-BCFA-1AA6EDEF7818}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{341A602A-9E8E-4F96-8B66-0DB3B485B2FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{341A602A-9E8E-4F96-8B66-0DB3B485B2FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{341A602A-9E8E-4F96-8B66-0DB3B485B2FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{341A602A-9E8E-4F96-8B66-0DB3B485B2FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{640A7D6E-E1C0-46C8-BCFA-1AA6EDEF7818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{640A7D6E-E1C0-46C8-BCFA-1AA6EDEF7818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{640A7D6E-E1C0-46C8-BCFA-1AA6EDEF7818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{640A7D6E-E1C0-46C8-BCFA-1AA6EDEF7818}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

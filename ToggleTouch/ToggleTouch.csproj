@@ -4,9 +4,9 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{341A602A-9E8E-4F96-8B66-0DB3B485B2FC}</ProjectGuid>
+        <ProjectGuid>{640A7D6E-E1C0-46C8-BCFA-1AA6EDEF7818}</ProjectGuid>
         <OutputType>WinExe</OutputType>
-        <RootNamespace>TestSysTray</RootNamespace>
+        <RootNamespace>ToggleTouch</RootNamespace>
         <AssemblyName>ToggleTouch</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
@@ -15,7 +15,7 @@
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
+        <PlatformTarget>x64</PlatformTarget>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
@@ -23,15 +23,17 @@
         <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
+        <Prefer32bit>false</Prefer32bit>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
+<!-- set Optimize to false to avoid x86 compilation on x64 system -->
+        <Optimize>false</Optimize>
         <OutputPath>bin\Release\</OutputPath>
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
+        <Prefer32bit>false</Prefer32bit>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="System" />
@@ -52,8 +54,6 @@
             <Generator>MSBuild:Compile</Generator>
             <SubType>Designer</SubType>
         </ApplicationDefinition>
-        <Compile Include="Commands\BaseCommand.cs" />
-        <Compile Include="Commands\NotifyCommand.cs" />
         <Compile Include="ViewModels\NotifyViewModel.cs" />
         <Compile Include="ViewModels\ViewModelBase.cs" />
         <Page Include="MainWindow.xaml">
@@ -64,6 +64,9 @@
             <DependentUpon>App.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+        <Compile Include="Commands\BaseCommand.cs" />
+        <Compile Include="Commands\NotifyCommand.cs" />
+        <Compile Include="Lib\SetupDiAPI.cs" />
         <Compile Include="MainWindow.xaml.cs">
             <DependentUpon>MainWindow.xaml</DependentUpon>
             <SubType>Code</SubType>

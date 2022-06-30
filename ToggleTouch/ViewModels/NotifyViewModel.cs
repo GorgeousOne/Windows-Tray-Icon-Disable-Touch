@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 using System.Windows.Input;
-using TestSysTray.Commands;
+using ToggleTouch.Commands;
 
-namespace TestSysTray.ViewModels
+namespace ToggleTouch.ViewModels
 {
     public class NotifyViewModel : ViewModelBase
     {
