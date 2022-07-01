@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToggleTouch"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Toggle Touch" Height="350" Width="525">
     <Grid>
         <Button Padding="10 5"
                 HorizontalAlignment="Center"

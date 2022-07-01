@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows;
 using ToggleTouch.Lib;
+using ToggleTouch.ViewModels;
 using Forms = System.Windows.Forms; 
 namespace ToggleTouch
 {
@@ -27,27 +29,21 @@ namespace ToggleTouch
 		
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			string path = Directory.GetCurrentDirectory();
-			Console.WriteLine(path);
-
 			_notifyIcon.Icon = _enabledIcon;
 			_notifyIcon.Text = "Touch Enabled";
 			_notifyIcon.Click += NotifyIcon_Click;
 			
 			// creates icon right click context menu
 			_notifyIcon.ContextMenuStrip = new Forms.ContextMenuStrip();
-			// _notifyIcon.ContextMenuStrip.Items.Add("Exit", Image.FromFile("Resources/icon16x24x32.ico"), OnExitClicked);
+			_notifyIcon.ContextMenuStrip.Items.Add("Configure", null, OnConfigureClicked);
 			_notifyIcon.ContextMenuStrip.Items.Add("Exit", null, OnExitClicked);
 			_notifyIcon.Visible = true;
-			
-			// string platform = Environment.Is64BitProcess ? "x64" : "x86";
-			// _notifyIcon.ShowBalloonTip(1000, "Toggle Touch", platform , Forms.ToolTipIcon.Info);
 
 			// creates a button click listener for the window?
-			// MainWindow = new MainWindow();
-			// MainWindow.DataContext = new NotifyViewModel(_notifyIcon);
-			// MainWindow.WindowState = WindowState.Minimized;
-			// MainWindow.Show();
+			MainWindow = new MainWindow();
+			MainWindow.DataContext = new NotifyViewModel(_notifyIcon);
+			
+			MainWindow.Show();
 			base.OnStartup(e);
 		}
 
@@ -56,20 +52,17 @@ namespace ToggleTouch
 			_notifyIcon.Dispose();
 			base.OnExit(e);
 		}
-
+		
 		private void NotifyIcon_Click(object sender, EventArgs e)
 		{
-			Forms.MouseEventArgs mouseEventArgs = (Forms.MouseEventArgs)e;
+			Forms.MouseEventArgs eventArgs = (Forms.MouseEventArgs)e;
 			
-			if (mouseEventArgs.Button == Forms.MouseButtons.Left)
+			if (eventArgs.Button == Forms.MouseButtons.Left)
 			{
 				ToggleTouchScreen();
 			}
-			
-			// MainWindow.WindowState = WindowState.Normal;
-			// MainWindow.Activate();
 		}
-		
+
 		public void ToggleTouchScreen()
 		{
 			_isTouchEnabled = !_isTouchEnabled;
@@ -89,6 +82,12 @@ namespace ToggleTouch
 			// string instancePath = @"ACPI\PNP0F03\4&3688D3F&0";
 			string instancePath = @"HID\VID_056A&PID_50A0&COL01\6&22485568&3&0000";
 			DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, _isTouchEnabled);
+		}
+		
+		private void OnConfigureClicked(object sender, EventArgs e)
+		{
+			MainWindow.Show();
+			MainWindow.WindowState = WindowState.Normal;
 		}
 		
 		private void OnExitClicked(object sender, EventArgs e)
