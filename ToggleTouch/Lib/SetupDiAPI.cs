@@ -8,6 +8,7 @@ using System.Security;
 using System.Runtime.ConstrainedExecution;
 using System.Management;
 
+// source: https://stackoverflow.com/questions/1438371/win32-api-function-to-programmatically-enable-disable-device/1610140#1610140
 namespace ToggleTouch.Lib
 {
 	[Flags()]

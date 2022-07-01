@@ -1,10 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Windows;
 using ToggleTouch.Lib;
-using ToggleTouch.ViewModels;
 using Forms = System.Windows.Forms; 
 namespace ToggleTouch
 {
@@ -19,6 +16,8 @@ namespace ToggleTouch
 
 		private Icon _enabledIcon;
 		private Icon _disabledIcon;
+
+		private MainWindow _main;
 		
 		public App()
 		{
@@ -40,17 +39,34 @@ namespace ToggleTouch
 			_notifyIcon.Visible = true;
 
 			// creates a button click listener for the window?
-			MainWindow = new MainWindow();
-			MainWindow.DataContext = new NotifyViewModel(_notifyIcon);
+			_main = new MainWindow();
+			MainWindow = _main;
 			
 			MainWindow.Show();
+			
+			LoadSettings();
 			base.OnStartup(e);
 		}
 
 		protected override void OnExit(ExitEventArgs e)
 		{
+			SaveSettings();
 			_notifyIcon.Dispose();
 			base.OnExit(e);
+		}
+
+		private void LoadSettings() {
+			ToggleTouch.Properties.Settings.Default.Reload();
+			_main.GuidString = ToggleTouch.Properties.Settings.Default.DeviceGUID;
+			_main.InstancePathString = ToggleTouch.Properties.Settings.Default.DeviceInstancePath;
+		}
+		
+		private void SaveSettings()
+        {
+			ToggleTouch.Properties.Settings.Default.DeviceGUID = _main.GuidString;
+			ToggleTouch.Properties.Settings.Default.DeviceInstancePath = _main.InstancePathString;
+			ToggleTouch.Properties.Settings.Default.Save();
+			ToggleTouch.Properties.Settings.Default.Reload();
 		}
 		
 		private void NotifyIcon_Click(object sender, EventArgs e)
@@ -69,18 +85,13 @@ namespace ToggleTouch
 			_notifyIcon.Icon = _isTouchEnabled ? _enabledIcon : _disabledIcon;
 			_notifyIcon.Text = _isTouchEnabled ? "Touch Enabled" : "Touch Disabled";
 
-			// every type of device has a hard-coded GUID, this is the one for mice
-			// Guid mouseGuid = new Guid("{4d36e96f-e325-11ce-bfc1-08002be10318}");
-
 			//touch screen GUID
-			Guid touchScreenGuid = new Guid("{745a17a0-74d3-11d0-b6fe-00a0c90f57da}");
+			// Guid touchScreenGuid = new Guid("{745a17a0-74d3-11d0-b6fe-00a0c90f57da}");
+			Guid touchScreenGuid = new Guid(_main.GuidString);
 
-			// get this from the properties dialog box of this device in Device Manager
-			// under "details > property: device instance path"
-			// (german) "Details > Eigenschaft: Geräteinstanzpfad"
-			
-			// string instancePath = @"ACPI\PNP0F03\4&3688D3F&0";
-			string instancePath = @"HID\VID_056A&PID_50A0&COL01\6&22485568&3&0000";
+			//touch screen instance path
+			// string instancePath = @"HID\VID_056A&PID_50A0&COL01\6&22485568&3&0000";
+			string instancePath = _main.InstancePathString;
 			DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, _isTouchEnabled);
 		}
 		
