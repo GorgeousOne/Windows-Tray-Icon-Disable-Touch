@@ -5,10 +5,6 @@ using ToggleTouch.Lib;
 using Forms = System.Windows.Forms; 
 namespace ToggleTouch
 {
-	/// <summary>
-	/// Interaction logic for App.xaml
-	/// try to create a tray icon app for windows
-	/// </summary>
 	public partial class App
 	{
 		private readonly Forms.NotifyIcon _notifyIcon;
@@ -29,7 +25,7 @@ namespace ToggleTouch
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			_notifyIcon.Icon = _enabledIcon;
-			_notifyIcon.Text = "Touch Enabled";
+			_notifyIcon.Text = "Touch ON";
 			_notifyIcon.Click += NotifyIcon_Click;
 			
 			// creates icon right click context menu
@@ -38,12 +34,9 @@ namespace ToggleTouch
 			_notifyIcon.ContextMenuStrip.Items.Add("Exit", null, OnExitClicked);
 			_notifyIcon.Visible = true;
 
-			// creates a button click listener for the window?
 			_main = new MainWindow(this);
 			MainWindow = _main;
-			
-			MainWindow.Show();
-			_main.FindControlReferences();
+			// MainWindow.Show();
 			
 			LoadSettings();
 			base.OnStartup(e);
@@ -62,6 +55,7 @@ namespace ToggleTouch
 			_main.InstancePathString = ToggleTouch.Properties.Settings.Default.DeviceInstancePath;
 		}
 		
+		// Saves entered device settings in user settings
 		public void SaveSettings()
         {
 			ToggleTouch.Properties.Settings.Default.DeviceGUID = _main.GuidString;
@@ -80,21 +74,20 @@ namespace ToggleTouch
 			}
 		}
 
+		//Tries to enabled/disable touch screen with entered device data and via SetupDi API
 		public void ToggleTouchScreen()
 		{
-			//touch screen GUID
 			Guid touchScreenGuid;
 			try
 			{
 				touchScreenGuid = new Guid(_main.GuidString);
 			}
-			catch (Exception e)
+			catch
 			{
 				OpenConfig();
 				MessageBox.Show("Please enter a valid GUID of your touch screen", "Toggle Touch", MessageBoxButton.OK, MessageBoxImage.Information);
 				return;
 			}
-			//touch screen instance path
 			string instancePath = _main.InstancePathString;
 			
 			if (DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, !_isTouchEnabled, HandleException)) {
@@ -105,11 +98,13 @@ namespace ToggleTouch
 			}
 		}
 
+		// Creates error general dialog for SetupDi errors
 		private void HandleException(Exception e)
 		{
 			OpenConfig();
-			MessageBox.Show("An error occured while toggling the touch screen: " + e, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			MessageBox.Show($"An error occured while toggling the touch screen. \nPlease make sure your device information is correct and the app is run as administrator. \n\nDetails:\n{e.Message}\n{e.StackTrace}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 		}
+		
 		private void OnConfigureClicked(object sender, EventArgs e)
 		{
 			OpenConfig();

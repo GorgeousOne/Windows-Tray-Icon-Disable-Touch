@@ -1,11 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace ToggleTouch
 {
@@ -33,6 +29,7 @@ namespace ToggleTouch
 		{
 			InitializeComponent();
 			_app = app;
+			FindControlReferences();
 		}
 		
 		public void FindControlReferences()
@@ -42,6 +39,10 @@ namespace ToggleTouch
 			_btnSave = FindName("BtnSave") as Button;
 		}
 		
+		/// <summary>
+		/// Hides application to tray on minimizing
+		/// </summary>
+		/// <param name="e"></param>
 		protected override void OnStateChanged(EventArgs e)
 		{
 			base.OnStateChanged(e);
@@ -52,6 +53,10 @@ namespace ToggleTouch
 			}
 		}
 
+		/// <summary>
+		/// Hides application to tray instead of exiting
+		/// </summary>
+		/// <param name="e"></param>
 		protected override void OnClosing(CancelEventArgs e)
 		{
 			e.Cancel = true;
@@ -65,51 +70,14 @@ namespace ToggleTouch
 			_btnSave.IsEnabled = false;
 		}
 
-		private bool _skipChange;
-		
-		private void InputGuid_OnTextChanged(object sender, TextChangedEventArgs e)
-		{
-			if (_skipChange)
-			{
-				_skipChange = false;
-				return;
-			}
-			int oldCaretIndex = _inputGuid.CaretIndex;
-			_skipChange = true;
-			_btnSave.IsEnabled = true;
-			_inputGuid.Text = PasteInputToGuidMask(_inputGuid.Text);
-			_inputGuid.CaretIndex = oldCaretIndex;
-		}
-		
+		/// <summary>
+		/// Enables save button when input fields are being changed
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void InputInstancePath_OnTextChanged(object sender, TextChangedEventArgs e)
 		{
 			_btnSave.IsEnabled = true;
-		}
-		
-		private string PasteInputToGuidMask(string input)
-		{
-			string digits = ExtractGuidChars(input);
-			string exactInput = RightPadTrim(digits, 32);
-			return exactInput
-				.Insert(32, "}")
-				.Insert(24, "-")
-				.Insert(20, "-")
-				.Insert(16, "-")
-				.Insert(0, "{");
-		}
-
-		private string ExtractGuidChars(string input)
-		{
-			return new Regex(@"[^a-z0-9]").Replace(input.ToLower(), string.Empty);
-		}
-
-		private string RightPadTrim(string input, int exactLength)
-		{
-			if (input.Length > exactLength)
-			{
-				return input.Substring(0, exactLength);
-			}
-			return input.PadRight(exactLength);
 		}
 	}
 }
