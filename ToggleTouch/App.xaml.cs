@@ -39,10 +39,11 @@ namespace ToggleTouch
 			_notifyIcon.Visible = true;
 
 			// creates a button click listener for the window?
-			_main = new MainWindow();
+			_main = new MainWindow(this);
 			MainWindow = _main;
 			
 			MainWindow.Show();
+			_main.FindControlReferences();
 			
 			LoadSettings();
 			base.OnStartup(e);
@@ -61,7 +62,7 @@ namespace ToggleTouch
 			_main.InstancePathString = ToggleTouch.Properties.Settings.Default.DeviceInstancePath;
 		}
 		
-		private void SaveSettings()
+		public void SaveSettings()
         {
 			ToggleTouch.Properties.Settings.Default.DeviceGUID = _main.GuidString;
 			ToggleTouch.Properties.Settings.Default.DeviceInstancePath = _main.InstancePathString;
@@ -83,15 +84,14 @@ namespace ToggleTouch
 		{
 			_isTouchEnabled = !_isTouchEnabled;
 			_notifyIcon.Icon = _isTouchEnabled ? _enabledIcon : _disabledIcon;
-			_notifyIcon.Text = _isTouchEnabled ? "Touch Enabled" : "Touch Disabled";
+			_notifyIcon.Text = _isTouchEnabled ? "Touch ON" : "Touch OFF";
+			_notifyIcon.ShowBalloonTip(1000, null, "Touch turned: " + (_isTouchEnabled ? "ON" : "OFF"), Forms.ToolTipIcon.None);
 
 			//touch screen GUID
-			// Guid touchScreenGuid = new Guid("{745a17a0-74d3-11d0-b6fe-00a0c90f57da}");
 			Guid touchScreenGuid = new Guid(_main.GuidString);
-
 			//touch screen instance path
-			// string instancePath = @"HID\VID_056A&PID_50A0&COL01\6&22485568&3&0000";
 			string instancePath = _main.InstancePathString;
+			
 			DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, _isTouchEnabled);
 		}
 		

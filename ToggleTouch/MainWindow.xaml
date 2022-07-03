@@ -10,8 +10,8 @@
         <Label Content="Device GUID:" HorizontalAlignment="Left" Margin="10,136,0,0" VerticalAlignment="Top" FontSize="14"/>
         <Label Content="Device Instance Path:" HorizontalAlignment="Left" Margin="10,170,0,0" VerticalAlignment="Top" FontSize="14"/>
         <TextBlock Margin="10,10,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="121" Width="426" FontSize="14"><Run Text="Enter "/><Run Text="the "/><Run Text="GUID and instance path of your "/><Run Text="touch screen here. "/><LineBreak/><Run Text="Th"/><Run Text="is"/><Run Text=" information can be found under:"/><LineBreak/><Run/><LineBreak/><Run Text="Device Manager &gt; Human Interface Devices &gt; "/><Run Text="HID-compilant touch screen"/><Run Text=" &gt; Right click: Properties &gt; "/><Run Text="Details &gt; Property: &quot;Class GUID&quot; and Property: &quot;Device instance path&quot;"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/></TextBlock>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="155,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" FontSize="14" x:Name="InputGuid"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="155,174,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" FontSize="14" x:Name="InputInstancePath"/>
-        <!-- <Button Content="Save" HorizontalAlignment="Left" Margin="372,207,0,0" VerticalAlignment="Top" Width="75" FontSize="14" Click="ButtonSave_OnClick" AutomationProperties.Name="btnSave"/> -->
+        <TextBox x:Name="InputGuid" HorizontalAlignment="Left" Height="23" Margin="155,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" FontSize="14" TextChanged="TextBox_OnTextChanged"/>
+        <TextBox x:Name="InputInstancePath" HorizontalAlignment="Left" Height="23" Margin="155,174,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="292" FontSize="14" TextChanged="TextBox_OnTextChanged"/>
+        <Button x:Name="BtnSave" Content="Save" HorizontalAlignment="Left" Margin="372,207,0,0" VerticalAlignment="Top" Width="75" FontSize="14" Click="BtnSave_OnClick" />
     </Grid>
 </Window>
