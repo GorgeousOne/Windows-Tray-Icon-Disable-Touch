@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ToggleTouch.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DeviceGUID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}</Value>
+    </Setting>
+    <Setting Name="DeviceInstancePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">some string...</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
+
