@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Microsoft.Win32.SafeHandles;
 using System.Security;
 using System.Runtime.ConstrainedExecution;
+using System.Windows;
 
 // source: https://stackoverflow.com/questions/1438371/win32-api-function-to-programmatically-enable-disable-device/1610140#1610140
 namespace ToggleTouch.Lib
@@ -253,9 +254,10 @@ ref int requiredSize);
 		/// <param name="instanceId">The device instance id of the device. Available in the device manager.</param>
 		/// <param name="enable">True to enable, False to disable.</param>
 		/// <remarks>Will throw an exception if the device is not Disableable.</remarks>
-		public static void SetDeviceEnabled(Guid classGuid, string instanceId, bool enable)
+		public static bool SetDeviceEnabled(Guid classGuid, string instanceId, bool enable, Action<Exception> errorHandler)
 		{
 			SafeDeviceInfoSetHandle diSetHandle = null;
+			bool success = true;
 			try
 			{
 				// Get the handle to a device information set for all devices matching classGuid that are present on the 
@@ -268,6 +270,11 @@ ref int requiredSize);
 				// Disable...
 				EnableDevice(diSetHandle, diData[index], enable);
 			}
+			catch (Exception e)
+			{
+				errorHandler(e);
+				success = false;
+			}
 			finally
 			{
 				if (diSetHandle != null)
@@ -279,6 +286,7 @@ ref int requiredSize);
 					diSetHandle.Dispose();
 				}
 			}
+			return success;
 		}
 
 		private static DeviceInfoData[] GetDeviceInfoData(SafeDeviceInfoSetHandle handle)

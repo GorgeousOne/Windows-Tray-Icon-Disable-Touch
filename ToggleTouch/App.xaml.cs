@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Windows;
 using ToggleTouch.Lib;
@@ -82,20 +82,40 @@ namespace ToggleTouch
 
 		public void ToggleTouchScreen()
 		{
-			_isTouchEnabled = !_isTouchEnabled;
-			_notifyIcon.Icon = _isTouchEnabled ? _enabledIcon : _disabledIcon;
-			_notifyIcon.Text = _isTouchEnabled ? "Touch ON" : "Touch OFF";
-			_notifyIcon.ShowBalloonTip(1000, null, "Touch turned: " + (_isTouchEnabled ? "ON" : "OFF"), Forms.ToolTipIcon.None);
-
 			//touch screen GUID
-			Guid touchScreenGuid = new Guid(_main.GuidString);
+			Guid touchScreenGuid;
+			try
+			{
+				touchScreenGuid = new Guid(_main.GuidString);
+			}
+			catch (Exception e)
+			{
+				OpenConfig();
+				MessageBox.Show("Please enter a valid GUID of your touch screen", "Toggle Touch", MessageBoxButton.OK, MessageBoxImage.Information);
+				return;
+			}
 			//touch screen instance path
 			string instancePath = _main.InstancePathString;
 			
-			DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, _isTouchEnabled);
+			if (DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, !_isTouchEnabled, HandleException)) {
+				_isTouchEnabled = !_isTouchEnabled;
+				_notifyIcon.Icon = _isTouchEnabled ? _enabledIcon : _disabledIcon;
+				_notifyIcon.Text = _isTouchEnabled ? "Touch ON" : "Touch OFF";
+				_notifyIcon.ShowBalloonTip(1000, null, "Touch turned: " + (_isTouchEnabled ? "ON" : "OFF"), Forms.ToolTipIcon.None);
+			}
 		}
-		
+
+		private void HandleException(Exception e)
+		{
+			OpenConfig();
+			MessageBox.Show("An error occured while toggling the touch screen: " + e, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+		}
 		private void OnConfigureClicked(object sender, EventArgs e)
+		{
+			OpenConfig();
+		}
+
+		private void OpenConfig()
 		{
 			MainWindow.Show();
 			MainWindow.WindowState = WindowState.Normal;
@@ -103,13 +123,14 @@ namespace ToggleTouch
 		
 		private void OnExitClicked(object sender, EventArgs e)
 		{
-			// WinForms app
 			if (Forms.Application.MessageLoop) 
 			{
+				// WinForms app
 				Forms.Application.Exit();
 			}
-			// Console app
-			else {
+			else 
+			{
+				// Console app
 				Environment.Exit(1);
 			}
 		}
