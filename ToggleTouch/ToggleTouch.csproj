@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{640A7D6E-E1C0-46C8-BCFA-1AA6EDEF7818}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>ToggleTouch</RootNamespace>
     <AssemblyName>ToggleTouch</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>

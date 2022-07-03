@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,7 +45,6 @@ namespace ToggleTouch.CustomControls
 				return;
 			}
 			int oldCaretIndex = CaretIndex;
-			Console.WriteLine($"change ({CaretIndex}) " + Text);
 
 			//skips next text change event unless it is on program start, where no 2nd event is fired
 			_silenceTextChange = !_isFirstUpdate;
@@ -113,7 +111,6 @@ namespace ToggleTouch.CustomControls
 			
 			foreach(KeyValuePair<int, char> entry in FixedMaskIndices)
 			{
-				Console.WriteLine(entry.Key);
 				exactInput = exactInput.Insert(entry.Key, entry.Value.ToString());
 			}
 			return exactInput;
