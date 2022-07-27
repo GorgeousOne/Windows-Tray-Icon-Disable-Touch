@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows;
+using Microsoft.Win32;
 using ToggleTouch.Lib;
 using Forms = System.Windows.Forms; 
 namespace ToggleTouch
@@ -10,21 +11,28 @@ namespace ToggleTouch
 		private readonly Forms.NotifyIcon _notifyIcon;
 		private bool _isTouchEnabled = true;
 
-		private Icon _enabledIcon;
-		private Icon _disabledIcon;
+		private readonly Icon _enabledIcon;
+		private readonly Icon _disabledIcon;
+		private readonly Icon _enabledIconDark;
+		private readonly Icon _disabledIconDark;
 
 		private MainWindow _main;
 		
-		public App()
-		{
+		private Forms.Timer _darkModeTimer;
+		private bool _isDarkMode;
+		
+		public App() {
 			_notifyIcon = new Forms.NotifyIcon();
-			_enabledIcon = new Icon("Resources/touch-enabled.ico");
-			_disabledIcon = new Icon("Resources/touch-disabled.ico");
+			_enabledIcon = new Icon("Resources/enabled.ico");
+			_disabledIcon = new Icon("Resources/disabled.ico");
+			_enabledIconDark = new Icon("Resources/enabled_dark.ico");
+			_disabledIconDark = new Icon("Resources/disabled_dark.ico");
 		}
 		
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			_notifyIcon.Icon = _enabledIcon;
+			StartDarkModeTimer();
+			UpdateIcon();
 			_notifyIcon.Text = "Touch ON";
 			_notifyIcon.Click += NotifyIcon_Click;
 			
@@ -92,12 +100,23 @@ namespace ToggleTouch
 			
 			if (DeviceHelper.SetDeviceEnabled(touchScreenGuid, instancePath, !_isTouchEnabled, HandleException)) {
 				_isTouchEnabled = !_isTouchEnabled;
-				_notifyIcon.Icon = _isTouchEnabled ? _enabledIcon : _disabledIcon;
+				UpdateIcon();
 				_notifyIcon.Text = _isTouchEnabled ? "Touch ON" : "Touch OFF";
 				_notifyIcon.ShowBalloonTip(1000, null, "Touch turned: " + (_isTouchEnabled ? "ON" : "OFF"), Forms.ToolTipIcon.None);
 			}
 		}
 
+		private void UpdateIcon() {
+			if (_isTouchEnabled) 
+			{
+				_notifyIcon.Icon = _isDarkMode ? _enabledIconDark : _enabledIcon;
+			}
+			else 
+			{
+				_notifyIcon.Icon = _isDarkMode ? _disabledIconDark : _disabledIcon;
+			}
+		}
+		
 		// Creates error general dialog for SetupDi errors
 		private void HandleException(Exception e)
 		{
@@ -118,6 +137,8 @@ namespace ToggleTouch
 		
 		private void OnExitClicked(object sender, EventArgs e)
 		{
+			// _darkModeTimer.Stop();
+			
 			if (Forms.Application.MessageLoop) 
 			{
 				// WinForms app
@@ -127,6 +148,36 @@ namespace ToggleTouch
 			{
 				// Console app
 				Environment.Exit(1);
+			}
+		}
+
+		private static bool IsDarkTheme() {
+			try {
+				int res = (int) Registry.GetValue(
+					"HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+					"AppsUseLightTheme", -1);
+				return res == 0;
+			}
+			catch {
+				return false;
+			}
+		}
+		
+		//Starts timer to check every second for changes in theme
+		public void StartDarkModeTimer() {
+			DarkModeTimer_Tick(null, null);
+			_darkModeTimer = new Forms.Timer();
+			_darkModeTimer.Tick += new EventHandler(DarkModeTimer_Tick);
+			_darkModeTimer.Interval = 1000;
+			_darkModeTimer.Start();
+		}
+		
+		private void DarkModeTimer_Tick(object sender, EventArgs e) 
+		{
+			if (_isDarkMode != IsDarkTheme()) 
+			{
+				_isDarkMode = !_isDarkMode;
+				UpdateIcon();
 			}
 		}
 	}
